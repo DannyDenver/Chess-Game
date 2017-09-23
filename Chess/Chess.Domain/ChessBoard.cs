@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Chess.Domain.Interfaces;
+using Chess.Domain.Models;
 
 namespace Chess.Domain
 {
@@ -8,19 +9,13 @@ namespace Chess.Domain
     {
         internal const int MaxBoardWidth = 7;
         internal const int MaxBoardHeight = 7;
-        public List<IPiece> pieces;
-
-        public ChessBoard()
-        {
-            pieces = new List<IPiece>();
-        }
-        
+        private List<IPiece> _pieces = new List<IPiece>();
 
         public void AddPiece(IPiece piece)
         {
-            if (this.IsLegalBoardPosition(piece.XCoordinate, piece.YCoordinate))
+            if (this.IsLegalBoardPosition(piece.Position))
             {
-                pieces.Add(piece);
+                _pieces.Add(piece);
             }
             else
             {
@@ -29,9 +24,9 @@ namespace Chess.Domain
             }
         }
 
-        public bool IsLegalBoardPosition(int xCoordinate, int yCoordinate)
+        public bool IsLegalBoardPosition(Position position)
         {
-            if((xCoordinate >= 0) && (xCoordinate <= 7) && (yCoordinate >=0) && (yCoordinate <= 7))
+            if((position.XCoordinate >= 0) && (position.XCoordinate <= 7) && (position.YCoordinate >=0) && (position.YCoordinate <= 7))
             {
                 return true;
             }

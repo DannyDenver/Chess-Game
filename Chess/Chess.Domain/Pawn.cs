@@ -1,64 +1,63 @@
 ﻿using System;
 using Chess.Domain.Interfaces;
+using Chess.Domain.Models;
 
 namespace Chess.Domain
 {
     public class Pawn : Piece, IPiece
     {
-        public int XCoordinate { get; private set; }
-        public int YCoordinate { get; private set; }
-        public PieceColor PieceColor { get; private set; }
-
         private bool _direction;
         private readonly IChessBoard _chessBoard;
         private bool _firstMove;
-       
-        public Pawn(IChessBoard chessboard, PieceColor pieceColor, int xCoordinate, int yCoordinate, bool firstMove)
+
+        public Pawn(IChessBoard chessboard, PieceColor pieceColor, Position position, bool firstMove) :
+            base(pieceColor, position)
         {
             _chessBoard = chessboard;
-            PieceColor = pieceColor;
-            XCoordinate = xCoordinate;
-            YCoordinate = yCoordinate;
             _firstMove = firstMove;
             _direction = Convert.ToBoolean(pieceColor);
         }
 
-
-
-        public override void Move(MovementType move, int newX, int newY)
+        public void Move(MovementType move, Position newPosition)
         {
-            if (ValidMove(move, newX, newY))
+            if (ValidMove(move, new Position(newPosition.XCoordinate, newPosition.YCoordinate)))
             {
-                XCoordinate = newX;
-                YCoordinate = newY;
+                base.Position = new Position(newPosition.XCoordinate, newPosition.YCoordinate); ;
+
                 _firstMove = false;
-                if (YCoordinate == 7 || YCoordinate == 0) _direction = !_direction;
+
+                if (Position.XCoordinate == 7 || Position.XCoordinate == 0) _direction = !_direction;
             }
         }
 
-        private bool ValidMove(MovementType move, int newX, int newY)
+        public new string CurrentPosition()
+        {
+            return base.CurrentPosition();
+        }
+
+        private bool ValidMove(MovementType move, Position newPosition)
         {
             //check to see if Pawn is on board
-            var onBoard = _chessBoard.IsLegalBoardPosition(newX, newY);
+            var onBoard = _chessBoard.IsLegalBoardPosition(newPosition);
 
             //check to see if pawn is going in the right direction
-            var rightDirection = (((newY - YCoordinate) > 0) == _direction);
+            var rightDirection = (((newPosition.YCoordinate - Position.YCoordinate) > 0) == _direction);
 
            if (onBoard && rightDirection)
                 {
                     //check to see if pawn made normal move
-                    if ((move == MovementType.Move) && (newX == XCoordinate))
+                    if ((move == MovementType.Move) && (newPosition.XCoordinate == Position.XCoordinate))
                     {
                         //check to see if number of positions moved is correct
-                        if ((Math.Abs(newY - YCoordinate) == 1) || ((Math.Abs(newY - YCoordinate) == 2) && _firstMove))
+                        if ((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 1) || ((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 2) && _firstMove))
                         {
                             return true;
                         }
                     }
                     //check to see if pawn made capture move
-                    if ((move == MovementType.Capture) && (newY != YCoordinate) && (newX != XCoordinate))
+                    if ((move == MovementType.Capture) && (newPosition.YCoordinate != Position.YCoordinate) && (newPosition.XCoordinate != Position.XCoordinate))
                     {
-                        if ((Math.Abs(newY - YCoordinate) == 1) && (Math.Abs(newX - XCoordinate) == 1))
+                        if ((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 1) && (Math.Abs(newPosition.XCoordinate - Position.XCoordinate) == 1))
                         {
                             return true;
                         }
@@ -66,9 +65,5 @@ namespace Chess.Domain
                 }
             return false;
         }
-
-
-
-      
     }
 }

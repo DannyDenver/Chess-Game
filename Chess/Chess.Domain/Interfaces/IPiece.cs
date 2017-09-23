@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Chess.Domain.Models;
 
 namespace Chess.Domain.Interfaces
 {
     public interface IPiece
     {
-        void Move(MovementType move, int newX, int newY);
-        void CurrentPosition();
+        string CurrentPosition();
 
-        int XCoordinate { get; }
-        int YCoordinate { get; }
+        Position Position { get; }
         PieceColor PieceColor { get; }
-
     }
 }
