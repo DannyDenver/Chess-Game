@@ -1,26 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
+using Chess.Domain.Interfaces;
 
 namespace Chess.Domain
 {
-    public class ChessBoard
+    public class ChessBoard : IChessBoard
     {
-        public static readonly int MaxBoardWidth = 7;
-        public static readonly int MaxBoardHeight = 7;
-        private Pawn[,] pieces;
+        internal const int MaxBoardWidth = 7;
+        internal const int MaxBoardHeight = 7;
+        public List<IPiece> pieces;
 
-        public ChessBoard ()
+        public ChessBoard()
         {
-            pieces = new Pawn[MaxBoardWidth, MaxBoardHeight];
+            pieces = new List<IPiece>();
         }
+        
 
-        public void Add(Pawn pawn, int xCoordinate, int yCoordinate, PieceColor pieceColor)
+        public void AddPiece(IPiece piece)
         {
-            throw new NotImplementedException("Need to implement ChessBoard.Add()");
+            if (this.IsLegalBoardPosition(piece.XCoordinate, piece.YCoordinate))
+            {
+                pieces.Add(piece);
+            }
+            else
+            {
+                Console.WriteLine("Piece added to board failed. Position outside of chessboard :( ");
+                Console.ReadLine();
+            }
         }
 
         public bool IsLegalBoardPosition(int xCoordinate, int yCoordinate)
         {
-            throw new NotImplementedException("Need to implement ChessBoard.IsLegalBoardPosition()");
+            if((xCoordinate >= 0) && (xCoordinate <= 7) && (yCoordinate >=0) && (yCoordinate <= 7))
+            {
+                return true;
+            }
+            return false;
         }
 
     }
