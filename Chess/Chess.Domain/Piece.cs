@@ -2,20 +2,22 @@
 
 namespace Chess.Domain
 {
-    public class Piece
+    public abstract class Piece
     {
-        public Position Position { get; protected set; }
+        public Position Position { get; set; }
         public PieceColor PieceColor { get; }
 
-        public Piece(PieceColor color, Position position)
+        protected Piece(PieceColor color, Position position)
         {
             PieceColor = color;
             Position = position;
         }
 
-        protected string CurrentPosition()
+        public string CurrentPosition()
         {
-            return $"Current X: {Position.XCoordinate} Current Y: {Position.YCoordinate} Piece Color: {PieceColor}";
+            return $"Current X: {Position.XCoordinate} Current Y: {Position.YCoordinate} Piece Color: {PieceColor} Piece: {this.GetType().Name}";
         }
+
+        public abstract void Move(MovementType move, Position newPosition);
     }
 }

@@ -6,7 +6,7 @@ namespace Chess.Domain
 {
     public class Pawn : Piece, IPiece
     {
-        private bool _direction;
+        private bool _direction; // we are playing by checkers rules... 
         private readonly IChessBoard _chessBoard;
         private bool _firstMove;
 
@@ -18,32 +18,28 @@ namespace Chess.Domain
             _direction = Convert.ToBoolean(pieceColor);
         }
 
-        public void Move(MovementType move, Position newPosition)
+        public override void Move(MovementType move, Position newPosition)
         {
-            if (ValidMove(move, new Position(newPosition.XCoordinate, newPosition.YCoordinate)))
+            if (ValidMove(move, newPosition) 
+                &&  _chessBoard.UnobstructedPosition(newPosition, PieceColor)
+                && _chessBoard.IsLegalBoardPosition(newPosition))
             {
-                base.Position = new Position(newPosition.XCoordinate, newPosition.YCoordinate); ;
+                
+                Position = newPosition; ;
 
                 _firstMove = false;
 
-                if (Position.XCoordinate == 7 || Position.XCoordinate == 0) _direction = !_direction;
+                if (Position.YCoordinate ==  _chessBoard.MaxBoardHeight || Position.YCoordinate == 0) _direction = !_direction;
             }
-        }
-
-        public new string CurrentPosition()
-        {
-            return base.CurrentPosition();
         }
 
         private bool ValidMove(MovementType move, Position newPosition)
         {
-            //check to see if Pawn is on board
-            var onBoard = _chessBoard.IsLegalBoardPosition(newPosition);
 
             //check to see if pawn is going in the right direction
             var rightDirection = (((newPosition.YCoordinate - Position.YCoordinate) > 0) == _direction);
 
-           if (onBoard && rightDirection)
+           if (rightDirection)
                 {
                     //check to see if pawn made normal move
                     if ((move == MovementType.Move) && (newPosition.XCoordinate == Position.XCoordinate))

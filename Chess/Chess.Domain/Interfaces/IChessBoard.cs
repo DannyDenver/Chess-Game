@@ -7,5 +7,8 @@ namespace Chess.Domain.Interfaces
         bool IsLegalBoardPosition(Position position);
 
         void AddPiece(IPiece pawn);
+        bool UnobstructedPosition(Position position, PieceColor pieceColor);
+        int MaxBoardWidth { get; }
+        int MaxBoardHeight { get; }
     }
 }

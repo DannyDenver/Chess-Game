@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bishop.cs" />
     <Compile Include="Interfaces\IChessBoard.cs" />
     <Compile Include="Interfaces\IPiece.cs" />
     <Compile Include="Models\Position.cs" />

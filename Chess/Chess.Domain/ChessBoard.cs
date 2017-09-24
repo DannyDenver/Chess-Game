@@ -1,21 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using Chess.Domain.Interfaces;
+﻿using Chess.Domain.Interfaces;
 using Chess.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Chess.Domain
 {
     public class ChessBoard : IChessBoard
     {
-        internal const int MaxBoardWidth = 7;
-        internal const int MaxBoardHeight = 7;
-        private List<IPiece> _pieces = new List<IPiece>();
+        public int MaxBoardWidth { get; }
+        public int MaxBoardHeight { get; }
+        public List<IPiece> Pieces { get; }
+
+        public ChessBoard(int maxBoardWidth, int maxBoardHeight)
+        {
+            Pieces = new List<IPiece>();
+            MaxBoardWidth = maxBoardWidth;
+            MaxBoardHeight = maxBoardHeight;
+        }
 
         public void AddPiece(IPiece piece)
         {
-            if (this.IsLegalBoardPosition(piece.Position))
+            if (IsLegalBoardPosition(piece.Position) &&  EmptySpace(piece.Position))
             {
-                _pieces.Add(piece);
+                Pieces.Add(piece);
             }
             else
             {
@@ -24,13 +32,49 @@ namespace Chess.Domain
             }
         }
 
+        public void CanMoveToPosition(Position position)
+        {
+            
+        }
+
         public bool IsLegalBoardPosition(Position position)
         {
-            if((position.XCoordinate >= 0) && (position.XCoordinate <= 7) && (position.YCoordinate >=0) && (position.YCoordinate <= 7))
+            if((position.XCoordinate >= 0) && (position.XCoordinate <= MaxBoardWidth) 
+                && (position.YCoordinate >=0) && (position.YCoordinate <= MaxBoardHeight))
             {
                 return true;
             }
             return false;
+        }
+
+        public bool UnobstructedPosition(Position position, PieceColor pieceColor)
+        {
+            return !Pieces.Any(x => x.PieceColor == pieceColor 
+                                && x.Position == position);
+        }
+
+        public void CheckIfCanCapturePiece(Position position, PieceColor pieceColor)
+        {
+            foreach (var piece in Pieces.Where(x => x.PieceColor != pieceColor))
+            {
+                if (piece.Position == position)
+                {
+                    if (piece.GetType().Name == "King")
+                    {
+                        Pieces.RemoveAll(x => x.PieceColor != pieceColor);
+                        Console.WriteLine(pieceColor + " kingdom has won!");
+                        Console.ReadLine();
+                    }
+                    Pieces.Remove(piece);
+                    break;
+                }
+            }
+        }
+
+
+        private bool EmptySpace(Position position)
+        {
+            return Pieces.All(x => x.Position != position);
         }
 
     }
