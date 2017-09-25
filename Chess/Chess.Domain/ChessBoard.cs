@@ -28,7 +28,7 @@ namespace Chess.Domain
             else
             {
                 Console.WriteLine("Piece added to board failed. Position outside of chessboard :( ");
-                Console.ReadLine();
+                //Console.ReadLine();
             }
         }
         
@@ -53,7 +53,7 @@ namespace Chess.Domain
                     {
                         Pieces.RemoveAll(x => x.PieceColor != pieceColor);
                         Console.WriteLine(pieceColor + " kingdom has won!");
-                        Console.ReadLine();
+                        //Console.ReadLine(); messes with unit tests
                         return true;
                     }
                     Pieces.Remove(piece);
@@ -64,7 +64,7 @@ namespace Chess.Domain
         }
 
 
-        private bool EmptySpace(Position position)
+        public bool EmptySpace(Position position)
         {
             return !Pieces.Any(x => x.Position.XCoordinate == position.XCoordinate && x.Position.YCoordinate == position.YCoordinate);
         }

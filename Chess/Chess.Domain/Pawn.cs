@@ -20,10 +20,10 @@ namespace Chess.Domain
 
         public override void Move(Position newPosition)
         {
-            if (ValidMove(newPosition) &&
-                _chessBoard.IsLegalBoardPosition(newPosition, PieceColor))
+            if (_chessBoard.IsLegalBoardPosition(newPosition, PieceColor) &&
+                ValidMove(newPosition))
             {
-                Position = newPosition; ;
+                Position = newPosition; 
 
                 _firstMove = false;
 
@@ -41,7 +41,8 @@ namespace Chess.Domain
                 //check to see if pawn made normal move and number of positions moved is correct
                 if (((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 1) ||
                     ((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 2) && _firstMove))
-                    && (newPosition.XCoordinate == Position.XCoordinate))
+                    && (newPosition.XCoordinate == Position.XCoordinate)
+                    && _chessBoard.EmptySpace(newPosition))
                     {
                         return true;
                     }
