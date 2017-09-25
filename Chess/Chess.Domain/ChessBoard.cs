@@ -47,7 +47,8 @@ namespace Chess.Domain
         {
             foreach (var piece in Pieces.Where(x => x.PieceColor != pieceColor))
             {
-                if (piece.Position == position)
+                if ((piece.Position.XCoordinate == position.XCoordinate) &&
+                    (piece.Position.YCoordinate == position.YCoordinate))
                 {
                     if (piece.GetType().Name == "King")
                     {
@@ -65,7 +66,6 @@ namespace Chess.Domain
 
         private bool EmptySpace(Position position)
         {
-
             return !Pieces.Any(x => x.Position.XCoordinate == position.XCoordinate && x.Position.YCoordinate == position.YCoordinate);
         }
 
