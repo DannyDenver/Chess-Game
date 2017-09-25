@@ -4,10 +4,9 @@ namespace Chess.Domain.Interfaces
 {
     public interface IChessBoard
     {
-        bool IsLegalBoardPosition(Position position);
-
         void AddPiece(IPiece pawn);
-        bool UnobstructedPosition(Position position, PieceColor pieceColor);
+        bool IsLegalBoardPosition(Position position, PieceColor pieceColor);
+        bool CheckIfCanCapturePiece(Position position, PieceColor pieceColor);
         int MaxBoardWidth { get; }
         int MaxBoardHeight { get; }
     }

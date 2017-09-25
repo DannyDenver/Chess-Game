@@ -18,45 +18,38 @@ namespace Chess.Domain
             _direction = Convert.ToBoolean(pieceColor);
         }
 
-        public override void Move(MovementType move, Position newPosition)
+        public override void Move(Position newPosition)
         {
-            if (ValidMove(move, newPosition) 
-                &&  _chessBoard.UnobstructedPosition(newPosition, PieceColor)
-                && _chessBoard.IsLegalBoardPosition(newPosition))
+            if (ValidMove(newPosition) &&
+                _chessBoard.IsLegalBoardPosition(newPosition, PieceColor))
             {
-                
                 Position = newPosition; ;
 
                 _firstMove = false;
 
-                if (Position.YCoordinate ==  _chessBoard.MaxBoardHeight || Position.YCoordinate == 0) _direction = !_direction;
+                if (Position.YCoordinate == _chessBoard.MaxBoardHeight || Position.YCoordinate == 0) _direction = !_direction;
             }
         }
 
-        private bool ValidMove(MovementType move, Position newPosition)
+        private bool ValidMove(Position newPosition)
         {
-
             //check to see if pawn is going in the right direction
-            var rightDirection = (((newPosition.YCoordinate - Position.YCoordinate) > 0) == _direction);
+           var rightDirection = (((newPosition.YCoordinate - Position.YCoordinate) > 0) == _direction);
 
            if (rightDirection)
                 {
-                    //check to see if pawn made normal move
-                    if ((move == MovementType.Move) && (newPosition.XCoordinate == Position.XCoordinate))
+                //check to see if pawn made normal move and number of positions moved is correct
+                if (((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 1) ||
+                    ((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 2) && _firstMove))
+                    && (newPosition.XCoordinate == Position.XCoordinate))
                     {
-                        //check to see if number of positions moved is correct
-                        if ((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 1) || ((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 2) && _firstMove))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
-                    //check to see if pawn made capture move
-                    if ((move == MovementType.Capture) && (newPosition.YCoordinate != Position.YCoordinate) && (newPosition.XCoordinate != Position.XCoordinate))
+                //check to see if pawn made capture move
+                if ((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 1) && (Math.Abs(newPosition.XCoordinate - Position.XCoordinate) == 1))
                     {
-                        if ((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 1) && (Math.Abs(newPosition.XCoordinate - Position.XCoordinate) == 1))
-                        {
+                        if(_chessBoard.CheckIfCanCapturePiece(newPosition, PieceColor))
                             return true;
-                        }
                     }
                 }
             return false;

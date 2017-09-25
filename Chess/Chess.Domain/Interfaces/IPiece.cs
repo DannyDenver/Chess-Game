@@ -7,6 +7,6 @@ namespace Chess.Domain.Interfaces
         Position Position { get; }
         PieceColor PieceColor { get; }
 
-        void Move(MovementType move, Position newPosition);
+        void Move(Position newPosition);
     }
 }

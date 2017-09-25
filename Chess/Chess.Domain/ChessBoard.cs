@@ -1,6 +1,7 @@
 ﻿using Chess.Domain.Interfaces;
 using Chess.Domain.Models;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,7 +22,7 @@ namespace Chess.Domain
 
         public void AddPiece(IPiece piece)
         {
-            if (IsLegalBoardPosition(piece.Position) &&  EmptySpace(piece.Position))
+            if (OnBoard(piece.Position) &&  EmptySpace(piece.Position))
             {
                 Pieces.Add(piece);
             }
@@ -31,29 +32,18 @@ namespace Chess.Domain
                 Console.ReadLine();
             }
         }
-
-        public void CanMoveToPosition(Position position)
+        
+        public bool IsLegalBoardPosition(Position position, PieceColor pieceColor)
         {
-            
+            //check if any of own pieces are in the way
+            var freeOfOwnPieces = Pieces.Count == 0 || !Pieces.Any(x => x.PieceColor == pieceColor
+                                                                       && x.Position.XCoordinate == position.XCoordinate &&
+                                                                       x.Position.YCoordinate == position.YCoordinate); 
+
+            return (freeOfOwnPieces && OnBoard(position));
         }
 
-        public bool IsLegalBoardPosition(Position position)
-        {
-            if((position.XCoordinate >= 0) && (position.XCoordinate <= MaxBoardWidth) 
-                && (position.YCoordinate >=0) && (position.YCoordinate <= MaxBoardHeight))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public bool UnobstructedPosition(Position position, PieceColor pieceColor)
-        {
-            return !Pieces.Any(x => x.PieceColor == pieceColor 
-                                && x.Position == position);
-        }
-
-        public void CheckIfCanCapturePiece(Position position, PieceColor pieceColor)
+        public bool CheckIfCanCapturePiece(Position position, PieceColor pieceColor)
         {
             foreach (var piece in Pieces.Where(x => x.PieceColor != pieceColor))
             {
@@ -66,16 +56,27 @@ namespace Chess.Domain
                         Console.ReadLine();
                     }
                     Pieces.Remove(piece);
-                    break;
+                    return true;
                 }
             }
+            return false;
         }
 
 
         private bool EmptySpace(Position position)
         {
-            return Pieces.All(x => x.Position != position);
+
+            return !Pieces.Any(x => x.Position.XCoordinate == position.XCoordinate && x.Position.YCoordinate == position.YCoordinate);
         }
 
+        private bool OnBoard(Position position)
+        {
+            if ((position.XCoordinate >= 0) && (position.XCoordinate <= MaxBoardWidth)
+                && (position.YCoordinate >= 0) && (position.YCoordinate <= MaxBoardHeight))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -18,6 +18,6 @@ namespace Chess.Domain
             return $"Current X: {Position.XCoordinate} Current Y: {Position.YCoordinate} Piece Color: {PieceColor} Piece: {this.GetType().Name}";
         }
 
-        public abstract void Move(MovementType move, Position newPosition);
+        public abstract void Move(Position newPosition);
     }
 }

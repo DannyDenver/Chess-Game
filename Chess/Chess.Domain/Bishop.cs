@@ -14,26 +14,22 @@ namespace Chess.Domain
             
         }
         
-        public override void Move(MovementType move, Position newPosition)
+        public override void Move(Position newPosition)
         {
-            if (ValidMove(newPosition) && _chessBoard.UnobstructedPosition(newPosition, PieceColor))
+            if (ValidMove(newPosition) && _chessBoard.IsLegalBoardPosition(newPosition, PieceColor))
             {
+                _chessBoard.CheckIfCanCapturePiece(newPosition, PieceColor);
                 Position = newPosition;
             }
         }
 
         private bool ValidMove(Position newPosition)
         {
-            var onBoard = _chessBoard.IsLegalBoardPosition(newPosition);
-
-            if (onBoard)
-            {
-                if ((Math.Abs(newPosition.XCoordinate - Position.XCoordinate) ==
-                     Math.Abs(newPosition.YCoordinate - Position.YCoordinate)))
+            if ((Math.Abs(newPosition.XCoordinate - Position.XCoordinate) ==
+                    Math.Abs(newPosition.YCoordinate - Position.YCoordinate)))
                 {
                     return true;
                 }
-            }
             return false;
         }
     }
