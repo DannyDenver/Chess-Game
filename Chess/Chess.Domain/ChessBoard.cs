@@ -1,7 +1,6 @@
 ﻿using Chess.Domain.Interfaces;
 using Chess.Domain.Models;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -55,6 +54,7 @@ namespace Chess.Domain
                         Pieces.RemoveAll(x => x.PieceColor != pieceColor);
                         Console.WriteLine(pieceColor + " kingdom has won!");
                         Console.ReadLine();
+                        return true;
                     }
                     Pieces.Remove(piece);
                     return true;

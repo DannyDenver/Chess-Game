@@ -1,9 +1,6 @@
-﻿using System.Linq;
-using System.Runtime.Remoting;
-using Chess.Domain.Models;
+﻿using Chess.Domain.Models;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
-
+using System.Linq;
 namespace Chess.Domain
 {
     [TestFixture]
@@ -185,7 +182,6 @@ namespace Chess.Domain
             _22_making_an_illegal_move_by_placing_the_black_pawn_on_X_equals_0_and_Y_eqauls_5_and_moving_to_X_equals_0_and_Y_eqauls_3_on_2nd_move_should_not_move_the_pawn()
         {
             _pawn = new Pawn(_chessBoard, PieceColor.Black, new Position(0, 5), false);
-            var position = _pawn.CurrentPosition();
             _chessBoard.AddPiece(_pawn);
             _pawn.Move(new Position(0, 3));
             Assert.That(_pawn.Position.XCoordinate, Is.EqualTo(0));
@@ -253,7 +249,7 @@ namespace Chess.Domain
         {
             var blackBishop1 = new Bishop(_chessBoard, PieceColor.Black, new Position(2, 7));
             var blackBishop2 = new Bishop(_chessBoard, PieceColor.Black, new Position(5, 7));
-            var blackPawn1 = new Pawn(_chessBoard, PieceColor.Black, new Position(0,6),true);
+            var blackPawn1 = new Pawn(_chessBoard, PieceColor.Black, new Position(0, 6), true);
 
             _chessBoard.AddPiece(blackBishop1);
             _chessBoard.AddPiece(blackBishop2);
@@ -306,7 +302,7 @@ namespace Chess.Domain
         //}
 
         [Test]
-        public void 
+        public void
             _11_making_a_legal_move_by_placing_the_black_bishop_on_X_equals_5_and_Y_eqauls_7_and_moving_to_X_equals_2_and_Y_eqauls_4_should_move_the_pawn()
         {
             //assemble
@@ -323,21 +319,23 @@ namespace Chess.Domain
             _12_making_a_legal_capture_by_placing_the_black_bishop_on_X_equals_5_and_Y_eqauls_7_and_moving_to_X_equals_2_and_Y_eqauls_4_should_capture_white_pawn_at_X_equals_2_and_Y_eqauls_4_()
         {
             //assemble
-            var whitePawn1 = new Pawn(_chessBoard, PieceColor.White, new Position(2,4), false);
+            var whitePawn1 = new Pawn(_chessBoard, PieceColor.White, new Position(2, 4), false);
             var blackBishop1 = new Bishop(_chessBoard, PieceColor.Black, new Position(5, 7));
 
             _chessBoard.AddPiece(blackBishop1);
             _chessBoard.AddPiece(whitePawn1);
 
             //assert before capture
-            Assert.That(_chessBoard.Pieces.Count(x => x.GetType().Name == "Pawn" && x.PieceColor == PieceColor.White), Is.EqualTo(1));
+            Assert.That(_chessBoard.Pieces.Count(x => x.GetType().Name == "Pawn" && x.PieceColor == PieceColor.White),
+                Is.EqualTo(1));
 
             blackBishop1.Move(new Position(2, 4));
             Assert.That(blackBishop1.Position.XCoordinate, Is.EqualTo(2));
             Assert.That(blackBishop1.Position.YCoordinate, Is.EqualTo(4));
-            Assert.That(_chessBoard.Pieces.Count(x => x.GetType().Name == "Pawn" && x.PieceColor == PieceColor.White), Is.EqualTo(0));
+            Assert.That(_chessBoard.Pieces.Count(x => x.GetType().Name == "Pawn" && x.PieceColor == PieceColor.White),
+                Is.EqualTo(0));
         }
-        
+
         [Test]
         public void
             _13_make_an_illegal_move_by_placing_the_black_bishop_on_X_equals_5_and_Y_eqauls_7_and_moving_to_X_equals_2_and_Y_eqauls_4_should_not_move_with_black_pawn_at_X_equals_2_and_Y_eqauls_4_()
@@ -350,12 +348,14 @@ namespace Chess.Domain
             _chessBoard.AddPiece(blackPawn1);
 
             //assert before capture
-            Assert.That(_chessBoard.Pieces.Count(x => x.GetType().Name == "Pawn" && x.PieceColor == PieceColor.Black), Is.EqualTo(1));
+            Assert.That(_chessBoard.Pieces.Count(x => x.GetType().Name == "Pawn" && x.PieceColor == PieceColor.Black),
+                Is.EqualTo(1));
 
             blackBishop1.Move(new Position(2, 4));
             Assert.That(blackBishop1.Position.XCoordinate, Is.EqualTo(5));
             Assert.That(blackBishop1.Position.YCoordinate, Is.EqualTo(7));
-            Assert.That(_chessBoard.Pieces.Count(x => x.GetType().Name == "Pawn" && x.PieceColor == PieceColor.Black), Is.EqualTo(1));
+            Assert.That(_chessBoard.Pieces.Count(x => x.GetType().Name == "Pawn" && x.PieceColor == PieceColor.Black),
+                Is.EqualTo(1));
         }
     }
 
@@ -363,14 +363,41 @@ namespace Chess.Domain
     public class capture_king_ends_game
     {
         private ChessBoard _chessBoard;
-        private Bishop _bishop;
+        private Bishop _blackBishop1;
 
         [SetUp]
         public void SetUp()
         {
             _chessBoard = new ChessBoard(7, 7);
-            _bishop = new Bishop(_chessBoard, PieceColor.Black, new Position(6, 3));
-            _chessBoard.AddPiece(_bishop);
+            _blackBishop1 = new Bishop(_chessBoard, PieceColor.Black, new Position(6, 2));
 
+            var mockWhiteKing = new King(_chessBoard, PieceColor.White, new Position(4,0));
+
+            var whitePawn1 = new Pawn(_chessBoard, PieceColor.White, new Position(0,1),true);
+            var whitePawn2 = new Pawn(_chessBoard, PieceColor.White, new Position(1, 1), true);
+            var whitePawn3 = new Pawn(_chessBoard, PieceColor.White, new Position(2, 1), true);
+            var whitePawn4 = new Pawn(_chessBoard, PieceColor.White, new Position(3, 1), true);
+
+            _chessBoard.AddPiece(_blackBishop1);
+            _chessBoard.AddPiece(mockWhiteKing);
+
+            _chessBoard.AddPiece(whitePawn1);
+            _chessBoard.AddPiece(whitePawn2);
+            _chessBoard.AddPiece(whitePawn3);
+            _chessBoard.AddPiece(whitePawn4);
+        }
+
+        [Test]
+        public void
+            _1_black_bishop_captures_white_king_all_white_pieces_are_removed()
+        {
+            //act
+            _blackBishop1.Move(new Position(4,0));
+
+            Assert.That(_blackBishop1.Position.XCoordinate, Is.EqualTo(4));
+            Assert.That(_blackBishop1.Position.YCoordinate, Is.EqualTo(0));
+
+            Assert.That(_chessBoard.Pieces.Count(x=> x.PieceColor == PieceColor.White), Is.EqualTo(0));
         }
     }
+}
