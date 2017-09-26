@@ -24,7 +24,7 @@ namespace Chess.Domain
 
         private bool ValidMove(Position newPosition)
         {
-            //valid move one position over vertically or horizontally 
+            //valid move one position diagonally 
             if (((Math.Abs(newPosition.YCoordinate - Position.YCoordinate) == 1) && (newPosition.XCoordinate == Position.XCoordinate)) ||
                 ((Math.Abs(newPosition.XCoordinate - Position.XCoordinate) == 1) && (newPosition.YCoordinate == Position.YCoordinate)))
             {

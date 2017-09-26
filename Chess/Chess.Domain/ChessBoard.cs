@@ -10,7 +10,7 @@ namespace Chess.Domain
     {
         public int MaxBoardWidth { get; }
         public int MaxBoardHeight { get; }
-        public List<IPiece> Pieces { get; } //change to array? faster, flyweight pattern - array of locations for blackpawns etc. 
+        public List<IPiece> Pieces { get; } //change to array? faster, but harder to manage
 
         public ChessBoard(int maxBoardWidth, int maxBoardHeight)
         {
@@ -53,6 +53,7 @@ namespace Chess.Domain
                         return EndGame(pieceColor);
                     }
                     Pieces.Remove(piece);
+
                     return true;
                 }
             }
@@ -61,12 +62,14 @@ namespace Chess.Domain
 
         public bool EmptySpace(Position position, PieceColor? pieceColor = null)
         {
+            var pieces = Pieces.Where(x => EqualPositions(x.Position, position));
+
             if (pieceColor != null)
             {
-                return !Pieces.Any(x => EqualPositions(x.Position, position) && x.PieceColor == pieceColor);
+                return pieces.All(x => x.PieceColor != pieceColor);
             }
 
-            return !Pieces.Any(x => EqualPositions(x.Position, position));
+            return !(pieces.Any());
         }
 
         private bool OnBoard(Position position)
