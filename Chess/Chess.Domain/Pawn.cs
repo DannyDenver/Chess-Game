@@ -10,7 +10,7 @@ namespace Chess.Domain
         private readonly IChessBoard _chessBoard;
         private bool _firstMove;
 
-        public Pawn(IChessBoard chessboard, PieceColor pieceColor, Position position, bool firstMove) :
+        public Pawn(IChessBoard chessboard, PieceColor pieceColor, Position position, bool firstMove) :  //possibly add array of positions to new up many pieces, so each instantiation has an array of positions, less memory needed
             base(pieceColor, position)
         {
             _chessBoard = chessboard;
