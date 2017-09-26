@@ -18,16 +18,15 @@ namespace Chess.Domain
             _direction = Convert.ToBoolean(pieceColor);
         }
 
-        public override void Move(Position newPosition)
+        public void Move(Position newPosition)
         {
-            if (_chessBoard.IsLegalBoardPosition(newPosition, PieceColor) &&
-                ValidMove(newPosition))
+            if (_chessBoard.IsLegalBoardPosition(newPosition, PieceColor) && ValidMove(newPosition)) // use default if at the end
             {
                 Position = newPosition; 
 
                 _firstMove = false;
 
-                if (Position.YCoordinate == _chessBoard.MaxBoardHeight || Position.YCoordinate == 0) _direction = !_direction;
+                if (Position.YCoordinate == _chessBoard.MaxBoardHeight || Position.YCoordinate == 0) _direction = !_direction; /// use default move
             }
         }
 

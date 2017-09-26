@@ -65,7 +65,7 @@ namespace Chess.Domain.UnitTests
         [Test]
         public void _4_whiteKing_makes_legal_back_move_from_x_equals_6_y_equals_1_to_x_equals_6_y_equals_0()
         {
-            _whiteKing.Position = new Position(6, 1);
+            _whiteKing = new King(_chessBoard, PieceColor.White, new Position(6,1));
             //act 
             _whiteKing.Move(new Position(6, 0));
 

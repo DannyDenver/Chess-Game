@@ -15,9 +15,16 @@ namespace Chess.Domain
 
         public string CurrentPosition()
         {
-            return $"Current X: {Position.XCoordinate} Current Y: {Position.YCoordinate} Piece Color: {PieceColor} Piece: {this.GetType().Name}";
+            return $"Current X: {Position.XCoordinate} Current Y: {Position.YCoordinate} Piece Color: {PieceColor} Piece: { GetType().Name}";
         }
 
-        public abstract void Move(Position newPosition);
+        //public virtual void Move(Position newPosition)  /// could set some default move logic here, difference between interface and base class 
+        //{
+        //    if ((newPosition.XCoordinate != 0) && (newPosition.YCoordinate != 0))
+        //    {
+        //        Position = newPosition;
+        //    }
+        //}
+
     }
 }

@@ -10,7 +10,7 @@ namespace Chess.Domain
     {
         public int MaxBoardWidth { get; }
         public int MaxBoardHeight { get; }
-        public List<IPiece> Pieces { get; }
+        public List<IPiece> Pieces { get; } //change to array? faster, flyweight pattern - array of locations for blackpawns etc. 
 
         public ChessBoard(int maxBoardWidth, int maxBoardHeight)
         {
@@ -35,26 +35,22 @@ namespace Chess.Domain
         public bool IsLegalBoardPosition(Position position, PieceColor pieceColor)
         {
             //check if any of own pieces are in the way
-            var freeOfOwnPieces = Pieces.Count == 0 || !Pieces.Any(x => x.PieceColor == pieceColor
-                                                                       && x.Position.XCoordinate == position.XCoordinate &&
-                                                                       x.Position.YCoordinate == position.YCoordinate); 
+            var freeOfOwnPieces = Pieces.Count == 0 || EmptySpace(position, pieceColor);
 
             return (freeOfOwnPieces && OnBoard(position));
         }
 
         public bool CheckIfCanCapturePiece(Position position, PieceColor pieceColor)
         {
-            foreach (var piece in Pieces.Where(x => x.PieceColor != pieceColor))
+            var opposingPieces = Pieces.Where(x => x.PieceColor != pieceColor);
+
+            foreach (var piece in opposingPieces)
             {
-                if ((piece.Position.XCoordinate == position.XCoordinate) &&
-                    (piece.Position.YCoordinate == position.YCoordinate))
+                if(EqualPositions(piece.Position, position))
                 {
                     if (piece.GetType().Name == "King")
                     {
-                        Pieces.RemoveAll(x => x.PieceColor != pieceColor);
-                        Console.WriteLine(pieceColor + " kingdom has won!");
-                        //Console.ReadLine(); messes with unit tests
-                        return true;
+                        return EndGame(pieceColor);
                     }
                     Pieces.Remove(piece);
                     return true;
@@ -63,20 +59,44 @@ namespace Chess.Domain
             return false;
         }
 
-
-        public bool EmptySpace(Position position)
+        public bool EmptySpace(Position position, PieceColor? pieceColor = null)
         {
-            return !Pieces.Any(x => x.Position.XCoordinate == position.XCoordinate && x.Position.YCoordinate == position.YCoordinate);
+            if (pieceColor != null)
+            {
+                return !Pieces.Any(x => EqualPositions(x.Position, position) && x.PieceColor == pieceColor);
+            }
+
+            return !Pieces.Any(x => EqualPositions(x.Position, position));
         }
 
         private bool OnBoard(Position position)
         {
-            if ((position.XCoordinate >= 0) && (position.XCoordinate <= MaxBoardWidth)
-                && (position.YCoordinate >= 0) && (position.YCoordinate <= MaxBoardHeight))
+            if (position.XCoordinate >= 0 && position.XCoordinate <= MaxBoardWidth
+                && position.YCoordinate >= 0 && position.YCoordinate <= MaxBoardHeight)
             {
                 return true;
             }
             return false;
         }
+
+        private bool EqualPositions(Position positionOne, Position positionTwo)
+        {
+            if(positionOne.XCoordinate == positionTwo.XCoordinate &&
+                positionOne.YCoordinate == positionTwo.YCoordinate)
+                {
+                    return true;
+                }
+            return false;
+        }
+
+        private bool EndGame(PieceColor pieceColor)
+        {
+            Pieces.RemoveAll(x => x.PieceColor != pieceColor); 
+            Console.WriteLine(pieceColor + " kingdom has won!");
+            //Console.ReadLine(); messes with unit tests
+            return true;
+        }
+
+
     }
 }

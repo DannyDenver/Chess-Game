@@ -13,7 +13,7 @@ namespace Chess.Domain.UnitTests
         public void SetUp()
         {
             _chessBoard = new ChessBoard(7, 7);
-            _pawnBlack1 = new Pawn(_chessBoard, PieceColor.Black, new Position(6, 3), false);
+            _pawnBlack1 = new Pawn(_chessBoard, PieceColor.Black, new Position(6, 3), false);  //possibly pass in array of positions to new up all blackpawns
             _chessBoard.AddPiece(_pawnBlack1);
         }
         

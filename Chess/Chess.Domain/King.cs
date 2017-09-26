@@ -1,6 +1,6 @@
-﻿using System;
-using Chess.Domain.Interfaces;
+﻿using Chess.Domain.Interfaces;
 using Chess.Domain.Models;
+using System;
 
 namespace Chess.Domain
 {
@@ -8,10 +8,11 @@ namespace Chess.Domain
     {
         private IChessBoard _chessBoard { get; }
 
-        public override void Move(Position newPosition)
+        public void Move(Position newPosition)
         {
             if (_chessBoard.IsLegalBoardPosition(newPosition, PieceColor) && ValidMove(newPosition))
             {
+                _chessBoard.CheckIfCanCapturePiece(newPosition, PieceColor);
                 Position = newPosition;
             }
         }
@@ -35,9 +36,7 @@ namespace Chess.Domain
             {
                 return true;
             }
-
             return false;
-
         }
     }
 }

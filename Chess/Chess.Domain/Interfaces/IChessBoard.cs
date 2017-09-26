@@ -9,6 +9,6 @@ namespace Chess.Domain.Interfaces
         bool CheckIfCanCapturePiece(Position position, PieceColor pieceColor);
         int MaxBoardWidth { get; }
         int MaxBoardHeight { get; }
-        bool EmptySpace(Position position);
+        bool EmptySpace(Position position, PieceColor? color = null);
     }
 }

@@ -13,8 +13,8 @@ namespace Chess.Domain
             _chessBoard = chessBoard;
             
         }
-        
-        public override void Move(Position newPosition)
+
+        public void Move(Position newPosition)
         {
             if (ValidMove(newPosition) && _chessBoard.IsLegalBoardPosition(newPosition, PieceColor))
             {
